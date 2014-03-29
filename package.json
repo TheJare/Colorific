@@ -1,0 +1,13 @@
+{
+    "name": "Colorific",
+    "main": "index.html",
+    "window": {
+        "title": "Colorific!",
+        "icon": "link.png",
+        "toolbar": false,
+        "frame": false,
+        "position": "center",
+        "resizable": false,
+        "fullscreen": true
+    }
+}
