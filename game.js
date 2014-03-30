@@ -292,19 +292,20 @@ BoardGame.prototype.click = function(x, y) {
                 }
             }
 
-            // Blow up gems in the series
+            // Set up scoring
             var score = 0;
-            var maxi = 0;
             var scoreFactor = (series[0].c == this.doubleColor)? 2 : ((series[0].c == this.halfColor)? 0.5 : 1);
             if (foundAll) {
                 scoreFactor *= 2;
             }
+            // Blow up gems in the series
             for (var i = 0; i < series.length; ++i) {
                 var g = series[i];
                 score += (i+1);
+                // Blow up this gem
                 this.entities.add(new Explosion(g.x, g.y, g.c))
                 this.board[g.i][g.j] = null;
-                maxi = Math.max(maxi, g.i);
+                // Push downwards all gems above it 
                 for (var bi = g.i-1; bi >= 0; --bi) {
                     var bg = this.board[bi][g.j];
                     if (bg) {
@@ -314,18 +315,21 @@ BoardGame.prototype.click = function(x, y) {
                         bg.vy = -RandomFloat(1);
                     }
                 }
-                this.lastScore = Math.floor(score*scoreFactor+0.5);
-                this.score += this.lastScore;
             }
+            this.lastScore = Math.floor(score*scoreFactor+0.5);
+            this.score += this.lastScore;
+
             // Create new gems
             for (var i = 0; i < BOARD_GEMS_H; ++i) {
                 for (var j = 0; j < BOARD_GEMS_W; ++j) {
                     var g = this.board[i][j];
                     if (g === null) {
-                        this.board[i][j] = this.createGem(i, j, BOARD_GEMS_H/*maxi*/);
+                        this.board[i][j] = this.createGem(i, j, BOARD_GEMS_H);
                     }
                 }
             }
+
+            // Prepare for next turn
             this.state = BoardGame.States.MOVING;
             this.doubleColor = null;
             this.halfColor = null;
